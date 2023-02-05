@@ -22,5 +22,26 @@ When in eternal lines to time thou grow'st:\n\
 So long as men can breathe or eyes can see, \
 So long lives this, and this gives life to thee.";
 
-	return(0);
+	int i, j;
+	i = j = 0;
+	while (text[i] != '\0')
+	{
+		printf("%c", text[i]);
+		if (text[i] == '\n')
+		{
+			j = 0;
+		}
+		else
+		{
+			j++;
+			if (j % W_DEFAULT == 0)
+			{
+				printf(" %d\n", j);
+				j = 0;
+			}
+		};
+		i++;
+	}
+	// printf("%s", text);
+	return (0);
 }
