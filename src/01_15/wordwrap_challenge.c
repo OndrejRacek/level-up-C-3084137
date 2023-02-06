@@ -37,8 +37,25 @@ When in eternal lines to time thou grow'st:\n\
 So long as men can breathe or eyes can see, \
 So long lives this, and this gives life to thee.";
 
-	int i, ccnt, bol;
+	int i, ccnt, bol, lastspc, linewidth;
 	i = ccnt = 0;
+	lastspc = -1;
+	linewidth = W_DEFAULT;
+	// printf("Called with %d arguments\n", argc);
+	if (argc == 1)
+		printf("Default width of %d characters\n", linewidth);
+	else if (argc == 2)
+	{
+		// printf("Enter the line width\n");
+		sscanf(argv[1], "%d", &linewidth);
+		// printf("Argument value = %d\n", linewidth);
+	}
+	else
+	{
+		printf("The function takes only one optional argument\n");
+		return 0;
+	}
+
 	while (text[i] != '\0')
 	{
 		// printf("%c", text[i]);
@@ -49,20 +66,42 @@ So long lives this, and this gives life to thee.";
 		{
 			output_line(text, bol, ccnt);
 			ccnt = 0;
+			lastspc = -1;
 		}
 		else
 		{
-			ccnt++;
-			if (ccnt % W_DEFAULT == 0)
+			if (text[i] == ' ' & ccnt == 0)
 			{
-				// printf(" %d\n", ccnt);
-				output_line(text, bol, ccnt);
-				ccnt = 0;
+				bol++;
 			}
 			else
 			{
-				if (text[i + 1] == '\0')
-					output_line(text, bol, ccnt);
+				ccnt++;
+				// lastspc is the index of the last encountered white character
+				if (text[i] == ' ')
+					lastspc = ccnt;
+				if (ccnt % linewidth == 0)
+				{
+					// printf(" %d\n", ccnt);
+					if (lastspc > -1)
+					{
+						output_line(text, bol, lastspc - 1);
+						bol += lastspc; // one character after the space (lastspc is the count of characters upto and including the white space)
+						ccnt -= lastspc;
+						lastspc = -1;
+					}
+					else
+					{
+						output_line(text, bol, ccnt);
+						ccnt = 0;
+						lastspc = -1;
+					}
+				}
+				else
+				{
+					if (text[i + 1] == '\0')
+						output_line(text, bol, ccnt);
+				}
 			}
 		};
 		i++;
