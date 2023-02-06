@@ -4,6 +4,21 @@
 #define W_MIN 16
 #define W_DEFAULT 40
 
+struct spaces
+{
+	int txtpos;
+	int linepos;
+};
+
+void output_line(char *text, int bol, int ccnt)
+{
+	for (int i = bol; i < bol + ccnt; i++)
+	{
+		printf("%c", text[i]);
+	}
+	printf("\n");
+}
+
 int main(int argc, char *argv[])
 {
 	/* Shakespear's 18th Sonnet */
@@ -22,22 +37,32 @@ When in eternal lines to time thou grow'st:\n\
 So long as men can breathe or eyes can see, \
 So long lives this, and this gives life to thee.";
 
-	int i, j;
-	i = j = 0;
+	int i, ccnt, bol;
+	i = ccnt = 0;
 	while (text[i] != '\0')
 	{
-		printf("%c", text[i]);
+		// printf("%c", text[i]);
+		// whenever the character count ccnt is reset it is a beggining of a line
+		if (ccnt == 0)
+			bol = i;
 		if (text[i] == '\n')
 		{
-			j = 0;
+			output_line(text, bol, ccnt);
+			ccnt = 0;
 		}
 		else
 		{
-			j++;
-			if (j % W_DEFAULT == 0)
+			ccnt++;
+			if (ccnt % W_DEFAULT == 0)
 			{
-				printf(" %d\n", j);
-				j = 0;
+				// printf(" %d\n", ccnt);
+				output_line(text, bol, ccnt);
+				ccnt = 0;
+			}
+			else
+			{
+				if (text[i + 1] == '\0')
+					output_line(text, bol, ccnt);
 			}
 		};
 		i++;
